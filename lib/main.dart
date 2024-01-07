@@ -51,7 +51,6 @@ class _MyAppState extends State<MyApp> {
               icon: Icon(Icons.settings),
               label: 'Settings'
             ),
-            
           ]
         ),
       ),
