@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
+
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -20,14 +19,14 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-    
+
     super.dispose();
   }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData.dark(),
       home: Scaffold(
-        // backgroundColor: Color.fromRGBO(25, 25, 25, 1.0),
         appBar: AppBar(
           backgroundColor: Colors.blue,
           title: const Text('MacroTrack'),
