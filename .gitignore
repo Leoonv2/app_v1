@@ -34,6 +34,7 @@ linux/
 ios/
 web/
 windows/
+macos/
 
 
 # Symbolication related
