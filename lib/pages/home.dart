@@ -17,6 +17,7 @@ class HomePageState extends State<HomePage> {
   int proteinLeft = 0;
   int carbsLeft = 0;
   
+  @override
   void initState() {
     super.initState();
     updateMacros();
@@ -29,6 +30,7 @@ class HomePageState extends State<HomePage> {
       carbsLeft = globals.carbsGoal - globals.eatenCarbs;
     });
   }
+  @override
   void dispose() {
     super.dispose();
   }
@@ -58,7 +60,7 @@ class HomePageState extends State<HomePage> {
             // switch to settings page
             
             Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => SettingsPage()));
+                MaterialPageRoute(builder: (context) => const SettingsPage()));
           }
         },
       ),

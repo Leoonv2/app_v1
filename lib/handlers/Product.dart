@@ -10,8 +10,8 @@ class Product {
   }
 
   void searchProduct(barcode) async {
-    final _barcode = barcode;
-    final _url =
-        'https://world.openfoodfacts.org/api/v0/product/$_barcode.json';
+    final barcode0 = barcode;
+    final url =
+        'https://world.openfoodfacts.org/api/v0/product/$barcode0.json';
   }
 }

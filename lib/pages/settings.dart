@@ -38,7 +38,7 @@ class _SettingsPageState extends State<SettingsPage> {
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(255, 37, 37, 37),
-          title: Center(child: const Text('Settings')),
+          title: const Center(child: Text('Settings')),
           //make button to go back to home page
         ),
         body: Column(
@@ -122,7 +122,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 'caloriesGoal': caloriesGoal,
               });
               Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => HomePage()));
+                  context, MaterialPageRoute(builder: (context) => const HomePage()));
             }
           },
         ),
