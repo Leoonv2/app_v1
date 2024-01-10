@@ -16,11 +16,14 @@ class HomePageState extends State<HomePage> {
   int caloriesLeft = 0;
   int proteinLeft = 0;
   int carbsLeft = 0;
+  var product;
   
   @override
   void initState() {
     super.initState();
     updateMacros();
+    product = Product().getProduct('0000040144382');
+
   }
   void updateMacros() {
     setState(() {
@@ -46,7 +49,7 @@ class HomePageState extends State<HomePage> {
       ),
       body: Text(
           // ignore: unnecessary_brace_in_string_interps
-          'You still need to eat\n${caloriesLeft} calories\n${proteinLeft} grams of protein\n${carbsLeft} grams of carbs'),
+          'You still need to eat\n${caloriesLeft} calories\n${proteinLeft} grams of protein\n${carbsLeft} grams of carbs\n\n${product}'),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
@@ -70,7 +73,7 @@ class HomePageState extends State<HomePage> {
           icon: SvgPicture.asset('assets/icons/barcode.svg'),
           onPressed: () {
             var barcode = Scanner().scanBarcode();
-            Product().registerProduct(barcode.toString());
+            // Product().registerProduct(barcode.toString());
           },
           color: Colors.white,
         ),
