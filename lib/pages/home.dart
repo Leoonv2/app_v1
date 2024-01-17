@@ -17,22 +17,29 @@ class HomePageState extends State<HomePage> {
   int proteinLeft = 0;
   int carbsLeft = 0;
   List<Map<String, dynamic>> eatenProducts = [];
+  int count = 0;
 
   void addProduct(product) {
     setState(() {
-      eatenProducts.insert(eatenProducts.length, product);
-      int index = eatenProducts.length;
-      eatenProducts = eatenProducts.map((pr) {
-        index--;
-        return {...pr, "index": index};
-      }).toList();
+      int index = eatenProducts.indexWhere((pr) => pr['name'] == product['name']);
+      if (index != -1) {
+        eatenProducts[index]['count']++;
+      } else {
+        eatenProducts.add(product);
+      }
+      updateMacros();
     });
   }
-
   @override
   void initState() {
     super.initState();
     updateMacros();
+  }
+
+  void updateCount() {
+    setState(() {
+      count = (count + 1) % 3;
+    });
   }
 
   void updateMacros() {
@@ -48,8 +55,6 @@ class HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  //TODO: Make Config tab to set goals
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,12 +69,20 @@ class HomePageState extends State<HomePage> {
               // ignore: unnecessary_brace_in_string_interps
               'You still need to eat\n${caloriesLeft} calories\n${proteinLeft} grams of protein\n${carbsLeft} grams of carbs\n',
             ),
-            Text(eatenProducts.map((pr) {
-              if (pr)
-              int index = eatenProducts.indexOf(pr) +1;
-              return pr["name"] + " x"+ index.toString();
-
-            }).join('\n')),
+            Expanded(
+              child: ListView.builder(
+                itemCount: eatenProducts.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    child: ListTile(
+                      title: Text(
+                          '${eatenProducts[index]['name']} (x${eatenProducts[index]['count']})'),
+                      subtitle: Text(eatenProducts[index]['amount'].toString()),
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -96,10 +109,11 @@ class HomePageState extends State<HomePage> {
           icon: SvgPicture.asset('assets/icons/barcode.svg'),
           onPressed: () async {
             // var barcode = Scanner().scanBarcode();
-            var productData = await Product().getProduct('0000040144382');
-            addProduct(productData);
 
-            // Product().registerProduct(barcode.toString());
+            var productData =
+                await Product().getProduct('0000040144382', count);
+            addProduct(productData);
+            updateCount();
           },
           color: Colors.white,
         ),
