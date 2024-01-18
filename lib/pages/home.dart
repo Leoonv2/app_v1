@@ -1,7 +1,8 @@
+import 'dart:ffi';
+
 import 'package:app_v1/pages/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:app_v1/handlers/BScan.dart';
 import 'package:app_v1/handlers/Product.dart';
 import 'package:app_v1/globals.dart' as globals;
 
@@ -21,19 +22,49 @@ class HomePageState extends State<HomePage> {
 
   void addProduct(product) {
     setState(() {
-      int index = eatenProducts.indexWhere((pr) => pr['name'] == product['name']);
-      if (index != -1) {
-        eatenProducts[index]['count']++;
-      } else {
+      int index = 0;
+      try {
+        index = eatenProducts.indexOf(product);
+        print("contains product");
+        eatenProducts[index].update("amount", (value) => value + 1);
+
+      } on RangeError catch (e) {
+        print("does not contain product");
         eatenProducts.add(product);
+        index = eatenProducts.indexOf(product);
+        eatenProducts[index].addEntries(
+          [MapEntry('amount', 1)].cast<MapEntry<String, Object>>(),
+        );
       }
+
+      // if (eatenProducts.contains(product)) {
+      //   print("contains product");
+      //   eatenProducts[index].update("amount", (value) => value + 1);
+      // } else {
+      //   print("does not contain product");
+      //   eatenProducts.add(product);
+      //   eatenProducts[index].addEntries(
+      //     [MapEntry('amount', 1)].cast<MapEntry<String, Object>>(),
+      //   );
+      // }
+      print(
+          "${eatenProducts[index]['name']}, ${eatenProducts[index]['amount']}");
+
       updateMacros();
     });
   }
+
+  void geteatenProducts() {
+    setState(() {
+      eatenProducts = globals.eatenProducts;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     updateMacros();
+    geteatenProducts();
   }
 
   void updateCount() {
@@ -73,11 +104,12 @@ class HomePageState extends State<HomePage> {
               child: ListView.builder(
                 itemCount: eatenProducts.length,
                 itemBuilder: (context, index) {
+                  final product = eatenProducts[index];
+                  // print(product);
                   return Card(
                     child: ListTile(
-                      title: Text(
-                          '${eatenProducts[index]['name']} (x${eatenProducts[index]['count']})'),
-                      subtitle: Text(eatenProducts[index]['amount'].toString()),
+                      title: Text('${product['name']} (x${product['amount']})'),
+                      subtitle: Text(product['amount'].toString()),
                     ),
                   );
                 },

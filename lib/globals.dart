@@ -3,7 +3,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 
-// if its the first time the user opens the app, set the goals to these values
 
 int proteinGoal = 150;
 int carbsGoal = 200;
@@ -19,22 +18,21 @@ Future<Map<String, int>> getGoals() async {
   return goals;
 }
 void setGoals(Map<String, int> newGoals) {
-  // Check if the newGoals map contains the keys for the global variables
   if (newGoals.containsKey('proteinGoal')) {
-    // Update the proteinGoal variable with the new value
     proteinGoal = newGoals['proteinGoal']!;
   }
   if (newGoals.containsKey('carbsGoal')) {
-    // Update the carbsGoal variable with the new value
     carbsGoal = newGoals['carbsGoal']!;
   }
   if (newGoals.containsKey('caloriesGoal')) {
-    // Update the caloriesGoal variable with the new value
     caloriesGoal = newGoals['caloriesGoal']!;
   }
 }
 
 
+
+
+List<Map<String, dynamic>> eatenProducts = [];
 int eatenProtein = 0;
 int eatenCarbs = 0;
 int eatenCalories = 0;
