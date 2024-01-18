@@ -22,16 +22,16 @@ class HomePageState extends State<HomePage> {
 
   void addProduct(product) {
     setState(() {
+      print(eatenProducts);
       int index = 0;
-      try {
-        index = eatenProducts.indexOf(product);
+      if (eatenProducts.contains(product)) {
+        int index = eatenProducts.indexOf(product);
         print("contains product");
         eatenProducts[index].update("amount", (value) => value + 1);
-
-      } on RangeError catch (e) {
+      } else {
         print("does not contain product");
         eatenProducts.add(product);
-        index = eatenProducts.indexOf(product);
+        int index = eatenProducts.indexOf(product);
         eatenProducts[index].addEntries(
           [MapEntry('amount', 1)].cast<MapEntry<String, Object>>(),
         );
@@ -47,8 +47,7 @@ class HomePageState extends State<HomePage> {
       //     [MapEntry('amount', 1)].cast<MapEntry<String, Object>>(),
       //   );
       // }
-      print(
-          "${eatenProducts[index]['name']}, ${eatenProducts[index]['amount']}");
+      print("${eatenProducts[index]['name']}, ${eatenProducts[index]['amount']}");
 
       updateMacros();
     });
