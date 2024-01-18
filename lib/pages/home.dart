@@ -22,7 +22,6 @@ class HomePageState extends State<HomePage> {
 
   void addProduct(product) {
     setState(() {
-      print(eatenProducts);
       int index = 0;
       if (eatenProducts.contains(product)) {
         int index = eatenProducts.indexOf(product);
@@ -143,6 +142,7 @@ class HomePageState extends State<HomePage> {
 
             var productData =
                 await Product().getProduct('0000040144382', count);
+            
             addProduct(productData);
             updateCount();
           },
