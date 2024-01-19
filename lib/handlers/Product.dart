@@ -1,10 +1,18 @@
 
+import 'package:http/http.dart' as http;
+
 class Product {
   int counter = 0;
 
   Future<Map<String, dynamic>> getProduct(barcode, ind) async {
     
-    
+    final resp = await http.get( // just pasted it in. did not test yet
+      Uri.parse('http://localhost:3000/api/product?ean=$barcode'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    print(resp.body);
 
     var json1 = {
       "id": 1,
