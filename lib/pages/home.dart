@@ -7,6 +7,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:app_v1/handlers/Product.dart';
 import 'package:app_v1/globals.dart' as globals;
 
+import '../handlers/BScan.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -126,13 +128,13 @@ class HomePageState extends State<HomePage> {
         child: IconButton(
           icon: SvgPicture.asset('assets/icons/barcode.svg'),
           onPressed: () async {
-            // var barcode = Scanner().scanBarcode();
+            var barcode = Scanner().scanBarcode();
 
             var productData =
-                await Product().getProduct('0000040144382', count);
+                await Product().getProduct(barcode);
 
-            addProduct(productData);
-            updateCount();
+            addProduct(jsonDecode(productData));
+            // updateCount();
           },
           color: Colors.white,
         ),

@@ -32,9 +32,10 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.2
   flutter_svg: ^2.0.9
-  flutter_barcode_scanner: ^2.0.0
   shared_preferences: ^2.2.2
   http: ^1.1.2
+  flutter_barcode_scanner: ^2.0.0
+  camera_windows: ^0.2.1+9
 
 
 dev_dependencies:
