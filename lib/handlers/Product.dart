@@ -4,6 +4,8 @@ class Product {
 
   Future<Map<String, dynamic>> getProduct(barcode, ind) async {
     
+    
+
     var json1 = {
       "id": 1,
       "name": "Knoppers",

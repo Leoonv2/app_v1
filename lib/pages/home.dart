@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'dart:convert';
 import 'package:app_v1/pages/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,34 +21,21 @@ class HomePageState extends State<HomePage> {
   List<Map<String, dynamic>> eatenProducts = [];
   int count = 0;
 
-  void addProduct(product) {
+  void addProduct(Map<String, dynamic> product) { // thx chatGPT to fix this function
     setState(() {
-      int index = 0;
-      if (eatenProducts.contains(product)) {
-        int index = eatenProducts.indexOf(product);
+      int index = eatenProducts.indexWhere((item) =>
+          item['name'] == product['name'] &&
+          item['calories'] == product['calories'] &&
+          item['protein'] == product['protein'] &&
+          item['carbs'] == product['carbs']);
+      if (index != -1) {
         print("contains product");
-        eatenProducts[index].update("amount", (value) => value + 1);
+        eatenProducts[index].update("amount", (dynamic value) => (value as int) + 1);
       } else {
         print("does not contain product");
+        product.addEntries( [MapEntry('amount', 1)].cast<MapEntry<String, Object>>() );
         eatenProducts.add(product);
-        int index = eatenProducts.indexOf(product);
-        eatenProducts[index].addEntries(
-          [MapEntry('amount', 1)].cast<MapEntry<String, Object>>(),
-        );
       }
-
-      // if (eatenProducts.contains(product)) {
-      //   print("contains product");
-      //   eatenProducts[index].update("amount", (value) => value + 1);
-      // } else {
-      //   print("does not contain product");
-      //   eatenProducts.add(product);
-      //   eatenProducts[index].addEntries(
-      //     [MapEntry('amount', 1)].cast<MapEntry<String, Object>>(),
-      //   );
-      // }
-      print("${eatenProducts[index]['name']}, ${eatenProducts[index]['amount']}");
-
       updateMacros();
     });
   }
@@ -142,7 +130,7 @@ class HomePageState extends State<HomePage> {
 
             var productData =
                 await Product().getProduct('0000040144382', count);
-            
+
             addProduct(productData);
             updateCount();
           },
