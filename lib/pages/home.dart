@@ -23,19 +23,31 @@ class HomePageState extends State<HomePage> {
   List<Map<String, dynamic>> eatenProducts = [];
   int count = 0;
 
-  void addProduct(Map<String, dynamic> product) { // thx chatGPT to fix this function
+  void addProduct(Map<String, dynamic> product, howmuch, unit) { // thx chatGPT to fix this function
     setState(() {
       int index = eatenProducts.indexWhere((item) =>
           item['name'] == product['name'] &&
           item['calories'] == product['calories'] &&
           item['protein'] == product['protein'] &&
           item['carbs'] == product['carbs']);
+
+      if (howmuch.runtimeType != int) {
+        // error handler
+      }
+      // if (unit != "g" || unit != "ml") {
+      //   unit = "g";
+      // }
+
       if (index != -1) {
         print("contains product");
         eatenProducts[index].update("amount", (dynamic value) => (value as int) + 1);
+        eatenProducts[index].update("howmuch", (dynamic value) => (value as int) + howmuch);
+
       } else {
         print("does not contain product");
-        product.addEntries( [MapEntry('amount', 1)].cast<MapEntry<String, Object>>() );
+        product.addEntries( [const MapEntry('amount', 1)].cast<MapEntry<String, Object>>() );
+        product.addEntries( [MapEntry('howmuch', howmuch)].cast<MapEntry<String, dynamic>>() );
+        product.addEntries( [MapEntry('unit', product["unit"])].cast<MapEntry<String, dynamic>>() );
         eatenProducts.add(product);
       }
       updateMacros();
@@ -81,30 +93,28 @@ class HomePageState extends State<HomePage> {
         title: const Center(child: Text('MacroTrack')),
         backgroundColor: const Color.fromARGB(255, 37, 37, 37),
       ),
-      body: Container(
-        child: Column(
-          children: <Widget>[
-            Text(
-              // ignore: unnecessary_brace_in_string_interps
-              'You still need to eat\n${caloriesLeft} calories\n${proteinLeft} grams of protein\n${carbsLeft} grams of carbs\n',
+      body: Column(
+        children: <Widget>[
+          Text(
+            // ignore: unnecessary_brace_in_string_interps
+            'You still need to eat\n${caloriesLeft} calories\n${proteinLeft} grams of protein\n${carbsLeft} grams of carbs\n',
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: eatenProducts.length,
+              itemBuilder: (context, index) {
+                final product = eatenProducts[index];
+                // print(product);
+                return Card(
+                  child: ListTile(
+                    title: Text('${product['name']} (x${product['amount']})'),
+                    subtitle: Text(product['howmuch'].toString() + product['unit'].toString()),
+                  ),
+                );
+              },
             ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: eatenProducts.length,
-                itemBuilder: (context, index) {
-                  final product = eatenProducts[index];
-                  // print(product);
-                  return Card(
-                    child: ListTile(
-                      title: Text('${product['name']} (x${product['amount']})'),
-                      subtitle: Text(product['amount'].toString()),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
@@ -128,12 +138,22 @@ class HomePageState extends State<HomePage> {
         child: IconButton(
           icon: SvgPicture.asset('assets/icons/barcode.svg'),
           onPressed: () async {
-            var barcode = Scanner().scanBarcode();
+            // var barcode = Scanner().scanBarcode();
+            var barcode = "90433627";
+            var productData = await Product().getProduct(barcode);
 
-            var productData =
-                await Product().getProduct(barcode);
+            // open window to show product image, name and ask for amount
 
-            addProduct(jsonDecode(productData));
+            // TODO: Open window to show product image, name and ask for amount
+            
+
+            if (productData["error"] == "ean is required") {
+                // error handler 
+            } else if (productData == "product not found") {
+                // error handler
+            } else {
+            addProduct(productData, 100, "g");
+            }
             // updateCount();
           },
           color: Colors.white,
